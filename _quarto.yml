@@ -1,0 +1,26 @@
+# project:
+#   type: book
+#   execute-dir: project
+#   output-dir: docs
+#   
+# execute:
+#   freeze: auto
+
+# book:
+#   title: ""
+#   author: ""
+#   favicon: 
+#   date: today
+#   date-format: short
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    # embed-resources: true
+    code-link: true
+    df-print: paged
+#   pdf:
+#     documentclass: scrreprt
+# editor: visual
+

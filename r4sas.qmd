@@ -1,0 +1,191 @@
+---
+title: "R excei 120"
+date:  " `r Sys.Date()`"
+author: "author"
+format:
+  html:
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    code-link: true
+    # code-fold: true
+    df-print: paged
+    # df-print: kable
+execute:  
+    cache: true
+---
+# Tabset or layout example
+
+```{r}
+#| layout-ncol: 2
+
+print("left")
+
+print("Rigth")
+
+```
+
+<!-- :::: {.column-body-outset-right} -->
+:::: {.column-page-inset-right}
+::: {.column width="50%"}
+-   R
+    -   [syntactic names](https://adv-r.hadley.nz/names-values.html#non-syntactic)
+
+        -   **letters**, **digits**, **.** and **\_**, but can't begin with **\_** or a **digit**
+        -   No use of reserved words like `TRUE`, `NULL`, `if`, and `function`
+
+    -   non-syntactic name, **\`\_abc\`**
+
+    -   **Case sensitive**
+:::
+
+::: {.column width="50%"}
+
+-   SAS
+    -   [`VALIDVARNAME= V7`](https://documentation.sas.com/doc/en/lrcon/9.4/p18cdcs4v5wd2dn1q0x296d3qek6.htm)
+        -   letters, numbers, or underscores
+        -   must begin with alphabe(A-Z, a-z) or the underscore
+        -   can be 1 to 32 characters long
+        -   not assign variables the names of SAS automatic variables(`_N_`,`_ERRROR_`)
+            or variable list names(`_NUMERIC_`, `_CHARACTER_`,`_ALL_`)
+        
+    -   `VALIDVARNAME=ANY`
+    -   **Case insensitive**
+:::
+
+::::
+    
+# R vs SAS
+
+
+# tidyverse vs base
+
+## Part I 入门 
+
+```{r}
+#| output: false
+library(tidyverse)
+```
+
+### 创建数据集
+
+```{r}
+# create the data from list
+# data.frame
+df <- tibble::tibble(
+  x = c("a", "b", "c", "d", NA, "e", "f", "a"),
+  y = c(1, 2, NA, 4, 5, 6, 7, 10)
+)
+
+# Row-wise tibble creation
+df <- tibble::tribble(
+   ~x, ~y,
+  "a",  1,
+  "b",  2,
+  "c", NA,
+  "d",  4,
+   NA,  5,
+  "e",  6,
+  "f",  7,
+  "a", 10
+  )
+
+```
+
+### 筛选行
+
+::: {layout-ncol=2}
+
+```{r}
+df
+```
+
+```{r}
+df %>%
+  dplyr::filter(x == "a")
+```
+:::
+
+
+::: {layout-ncol=2}
+```{r}
+df[which(df$x == "a"),]
+```
+
+```{r}
+# notice the NA missing value
+df[df$x == "a",]
+```
+
+:::
+
+```{r}
+df %>%
+  filter(y > 3 & y < 7)
+```
+
+
+### 输出df的所有列名  
+```{r}
+names(df)
+colnames(df)
+```
+
+
+### 修改列名
+
+```{r}
+df %>%
+  rename(new_x = x)
+df
+```
+
+### 统计频数
+
+```{r}
+df %>%
+  count(x)   
+```
+
+### 缺失值处理：将空值用上下值的平均值填充  
+
+
+```{r}
+df = df %>%
+  mutate(y = zoo::na.approx(y))
+df
+```
+
+**注：** dplyr包提供了`fill()`函数，可以用前值或后值插补缺失值。  
+
+```{r}
+df %>%
+  filter(y > 3)
+```
+
+### 数据去重  
+::: {layout-ncol=2}
+```{r}
+df %>%
+  distinct(x, .keep_all = TRUE)
+```
+
+```{r}
+df[!duplicated(df$x),]
+```
+:::
+
+### 数据计算 平均值  
+
+::: {layout-ncol=2}
+```{r}
+df %>%
+  summarise(avg = mean(y))
+```
+
+```{r}
+mean(df$y)
+```
+
+:::

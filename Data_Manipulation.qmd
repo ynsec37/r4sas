@@ -1,0 +1,132 @@
+---
+title: "data manipulation"
+subtitle: "for clinical sas programmer"
+date:  " `r Sys.Date()`"
+author: "author"
+format:
+  html:
+    grid:
+      sidebar-width: 200px
+      body-width: 1000px
+      margin-width: 100px
+    toc: true
+    toc-location: left
+    number-sections: true
+    embed-resources: true
+    code-link: true
+    # code-fold: true
+    df-print: paged
+    # df-print: kable
+execute:  
+    cache: true
+---
+
+```{r}
+#| output: false
+
+library(dplyr) 
+```
+
+# Data Manipulation
+
+## create data frame(tibble)
+
+::: grid
+::: g-col-6
+```{r}
+df <- tibble::tibble(
+  x = c("a", "b", "c", "d", NA, "e", "f", "a"),
+  y = c(1, 2, NA, 4, 5, 6, 7, 10)
+)
+
+# Row-wise tibble creation
+df <- tibble::tribble(
+   ~x, ~y,
+  "a",  1,
+  "b",  2,
+  "c", NA,
+  "d",  4,
+   NA,  5,
+  "e",  6,
+  "f",  7,
+  "a", 10
+  )
+```
+:::
+
+::: g-col-6
+```{sas}
+#| eval: false
+data df;
+    infile datalines dlm="," dsd truncover;
+    input x $ y;
+datalines;
+"a",1
+"b",2
+"c",
+"d",4
+   ,5
+"e",6
+"f",7
+"a",10
+;
+run;
+```
+:::
+:::
+
+```{r}
+#| layout-ncol: 2
+#| echo: false
+df
+knitr::include_graphics("images/Data Manipulation_2023-05-24T03-04-32.png")
+```
+
+## empty data frame
+
+## filter row
+
+Filtering rows based on certain conditions
+
+-   One condition
+
+::: grid
+::: g-col-6
+R
+
+```{r}
+#| eval: false
+df %>%
+  dplyr::filter(x == "a")
+```
+
+```{r}
+#| echo: false
+df %>%
+  dplyr::filter(x == "a")
+```
+:::
+
+::: g-col-3
+SAS
+
+```{sas}
+#| eval: false
+data df;
+    set df;
+    if x = "a";
+run; 
+```
+
+```{r}
+#| echo: false
+knitr::include_graphics("images/Data Manipulation_2023-05-24T03-12-34.png")
+```
+:::
+:::
+
+-   more conditions
+
+## select column
+
+Select specified variable - keep column - delete column
