@@ -1,0 +1,3 @@
+*.html linguist-detectable=false
+*.xpt linguist-detectable=false
+*.sas7bdat linguist-detectable=false
